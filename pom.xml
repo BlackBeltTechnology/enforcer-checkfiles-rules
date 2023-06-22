@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.blackbelt.maven.plugin</groupId>
     <artifactId>enforcer-checkfile-rules</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <name>enforcer-checkfile-rules</name>
     <description>Additional custom rules for Maven Enforcer</description>
