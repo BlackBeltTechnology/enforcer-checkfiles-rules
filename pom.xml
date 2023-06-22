@@ -1,0 +1,526 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>hu.blackbelt.maven.plugin</groupId>
+    <artifactId>enforcer-checkfile-rules</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>enforcer-checkfile-rules</name>
+    <description>Additional custom rules for Maven Enforcer</description>
+
+    <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <maven>3.8.3</maven>
+
+        <project-shortname>enforcer-checkfile-rules</project-shortname>
+        <project-repositoryId>BlackBeltTechnology/enforcer-checkfile-rules</project-repositoryId>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <src.dir>src/main</src.dir>
+
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <!--suppress UnresolvedMavenProperty -->
+        <logback-test-config>${maven.multiModuleProjectDirectory}/logback-test.xml</logback-test-config>
+
+        <slf4j-version>1.7.36</slf4j-version>
+        <junit-version>5.5.1</junit-version>
+        <surefire-version>3.0.0-M7</surefire-version>
+
+        <api.version>3.3.0</api.version>
+        <maven.version>3.8.3</maven.version>
+
+        <build-helper-maven-plugin-version>3.3.0</build-helper-maven-plugin-version>
+
+        <!-- Code Quality-->
+        <sonar-maven-plugin-version>3.9.1.2184</sonar-maven-plugin-version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.language>java</sonar.language>
+        <sonar.java.source>${java.version}</sonar.java.source>
+        <jacoco.version>0.8.8</jacoco.version>
+
+    </properties>
+
+    <url>http://github.com/${project-repositoryId}</url>
+
+    <issueManagement>
+        <url>https://github.com/${project-repositoryId}/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:${project-repositoryId}.git</connection>
+        <!--suppress UnresolvedMavenProperty -->
+        <developerConnection>scm:git:ssh://${git.username}@github.com:${project-repositoryId}.git
+        </developerConnection>
+        <url>http://github.com/${project-repositoryId}</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>robson</id>
+            <name>Robert Csakany</name>
+            <email>robert.csakany@blackbelt.hu</email>
+            <url>https://github.com/robertcsakany</url>
+            <organization>BlackBelt Technology</organization>
+            <organizationUrl>http://www.blackbelt.hu</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.enforcer</groupId>
+            <artifactId>enforcer-api</artifactId>
+            <version>${api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.enforcer</groupId>
+            <artifactId>enforcer-rules</artifactId>
+            <version>${api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+            <version>1.0-alpha-9</version>
+        </dependency>
+        -->
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <showErrors>true</showErrors>
+                    <streamLogs>false</streamLogs>
+                    <settingsFile>src/it/settings.xml</settingsFile>
+                    <postBuildHookScript>verify</postBuildHookScript>
+                    <addTestClassPath>true</addTestClassPath>
+                    <!--uncomment next line to debug invoker tests-->
+                    <!--<mavenOpts>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000</mavenOpts>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <pomIncludes>
+                                <pomInclude>**/pom.xml</pomInclude>
+                                <!-- Include sub directories -->
+                            </pomIncludes>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <propertyName>jacoco.agent</propertyName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <source>8</source>
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <failOnError>false</failOnError>
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <sourcepath>${project.basedir}/target/delombok</sourcepath>
+                    <tags>
+                        <tag>
+                            <name>model</name>
+                            <placement>a</placement>
+                            <head>EMF Model</head>
+                        </tag>
+                        <tag>
+                            <name>generated</name>
+                            <placement>a</placement>
+                            <head>EMF Generated</head>
+                        </tag>
+                        <tag>
+                            <name>ordered</name>
+                            <placement>a</placement>
+                            <head>EMF Ordered</head>
+                        </tag>
+                        <tag>
+                            <name>param</name>
+                            <placement>a</placement>
+                            <head>EMF Param</head>
+                        </tag>
+
+                    </tags>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>sign-artifacts</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.simplify4u.plugins</groupId>
+                        <artifactId>sign-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>release-dummy</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>dummy-distribution</id>
+                    <url>file:///tmp/${project.groupId}-${project.artifactId}-${project.version}/maven-snapshot/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>dummy-distribution</id>
+                    <url>file:///tmp/${project.groupId}-${project.artifactId}-${project.version}/maven-release/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>release-judong</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>judong-nexus-distribution</id>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <url>https://nexus.judo.technology/repository/maven-judong-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>judong-nexus-distribution</id>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <url>https://nexus.judo.technology/repository/maven-judong-snapshots/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>release-central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.13</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+
+        <profile>
+            <id>generate-github-asciidoc-diagrams</id>
+
+            <properties>
+                <asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
+                <asciidoctorj.version>2.5.6</asciidoctorj.version>
+                <asciidoctorj.diagram.version>2.2.3</asciidoctorj.diagram.version>
+                <jruby.version>9.3.4.0</jruby.version>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>${asciidoctor.maven.plugin.version}</version>
+                        <dependencies>
+                            <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                            <dependency>
+                                <groupId>org.jruby</groupId>
+                                <artifactId>jruby-complete</artifactId>
+                                <version>${jruby.version}</version>
+                            </dependency>
+                            <!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj</artifactId>
+                                <version>${asciidoctorj.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram</artifactId>
+                                <version>${asciidoctorj.diagram.version}</version>
+                            </dependency>
+                            <!-- Since asciidoctorj-diagram v2.2.0, uncomment to use specific version of plantuml or ditaa -->
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram-plantuml</artifactId>
+                                <version>1.2022.5</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram-ditaamini</artifactId>
+                                <version>1.0.3</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <sourceDirectory>./.github</sourceDirectory>
+                            <requires>
+                                <require>asciidoctor-diagram</require>
+                            </requires>
+                            <attributes>
+                                <!-- Example below shows how to specify in this pom instead of System's PATH, the location of dot command of Graphviz, required by PlantUML libraries -->
+                                <!-- Windows:
+                                    <graphvizdot>C:\Program Files (x86)\Graphviz2.38\bin\dot.exe</graphvizdot>
+                                -->
+                                <!-- *nix :
+                                    <graphvizdot>/usr/local/bin/dot</graphvizdot>
+                                -->
+                            </attributes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>generate-html-doc</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <attributes>
+                                        <imagesdir>./images</imagesdir>
+                                        <toc>left</toc>
+                                        <icons>font</icons>
+                                        <sectanchors>true</sectanchors>
+                                        <idprefix />
+                                        <idseparator>-</idseparator>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>copy-generated-gitflow-diagrams</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+
+                                <configuration>
+                                    <outputDirectory>${basedir}/.github</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/target/generated-docs/images/</directory>
+                                            <includes>
+                                                <include>*.png</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>update-source-code-license</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.0.0</version>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <addSvnKeyWords>false</addSvnKeyWords>
+                            <organizationName>BlackBelt Technology</organizationName>
+                            <inceptionYear>2018</inceptionYear>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <licenseName>epl_v2</licenseName>
+                                    <excludes>
+                                        <exclude>**/*.json</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>second</id>
+                                <goals>
+                                    <goal>update-project-license</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <licenseName>epl_v2</licenseName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

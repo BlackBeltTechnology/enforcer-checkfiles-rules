@@ -1,0 +1,143 @@
+enforcer-checkfile-rules
+========================
+
+Additional custom rules for Maven enforcer.
+
+Available extra rules:
+
+- `requireFilesContent` - enforces that the specified list of files exist and are containing the specified content.
+- `requireGlobMatches` - enforces that the specified list of globs matches any file in the given location.
+
+For more sample usages, refer to integration test scenarios in src/it folder.
+
+=== requireFilesContent
+
+Enforces that the specified list of files exist and are containing the specified content. The rule checks the file
+line by line by verifying the content using the method: line.contains(content).
+
+Supported parameters:
+
+- message - an optional message to the user if the rule fails.
+- files - a list of files to check.
+- content - the content that must exist in the list of files.
+- allowNulls - if null files should be allowed. If allowed, they will be treated as if they do exist. Default is false.
+
+==== Sample plugin configuration:
+
+[xml]
+----
+
+<project>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <!-- Checks that the String "AutoUpdate:true" is in src/foo/bar and src/foo/baz -->
+                <requireFilesContent>
+                  <files>
+                    <file>src/foo/bar</file>
+                    <file>src/foo/baz</file>
+                  </files>
+                  <content>AutoUpdate:true</content>
+                </requireFilesContent>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.enforcer</groupId>
+            <artifactId>enforcer-rules</artifactId>
+            <version>3.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>hu.blackbelt.maven.plugin</groupId>
+            <artifactId>enforcer-checkfiles-rules</artifactId>
+            <version><VERSION></version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
+----
+
+=== requireGlobMatches
+
+Enforces that the specified list of globs matches with files in the given location.
+Supported parameters:
+
+- message - an optional message to the user if the rule fails.
+- globs - a list of glob patterns to check.
+- location - the root is used to scan files. The glob definitions is relative to this location.
+
+[xml]
+----
+
+<project>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <!-- Cheks any files starting with 'b' is in src/foo folder -->
+                <rules>
+                  <requireGlobMatches>
+                    <globs>
+                        <glob>src/foo/b*</glob>
+                    </globs>
+                    <location>${project.basedir}</location>
+                  </requireGlobMatches>
+                </rules>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.enforcer</groupId>
+            <artifactId>enforcer-rules</artifactId>
+            <version>3.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>hu.blackbelt.maven.plugin</groupId>
+            <artifactId>enforcer-checkfiles-rules</artifactId>
+            <version><VERSION></version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
+----
+
+== Contributing to the project
+
+Everyone is welcome to contribute to JUDO! As a starter, please read the corresponding link:CONTRIBUTING.adoc[CONTRIBUTING] guide for details!
+
+== License
+
+This project is licensed under the https://www.apache.org/licenses/LICENSE-2.0/[Apache License - v 2.0].
