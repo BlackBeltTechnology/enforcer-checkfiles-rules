@@ -31,7 +31,7 @@
         <surefire-version>3.0.0-M7</surefire-version>
 
         <api.version>3.3.0</api.version>
-        <maven.version>3.8.3</maven.version>
+        <maven.version>3.9.2</maven.version>
 
         <build-helper-maven-plugin-version>3.3.0</build-helper-maven-plugin-version>
 
