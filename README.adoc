@@ -63,7 +63,7 @@ Supported parameters:
           </dependency>
           <dependency>
             <groupId>hu.blackbelt.maven.plugin</groupId>
-            <artifactId>enforcer-checkfiles-rules</artifactId>
+            <artifactId>enforcer-checkfile-rules</artifactId>
             <version><VERSION></version>
           </dependency>
         </dependencies>
